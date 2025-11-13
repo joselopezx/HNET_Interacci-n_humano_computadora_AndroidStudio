@@ -24,38 +24,33 @@ public class Registro extends AppCompatActivity {
         editMunicipio = findViewById(R.id.editMunicipio);
         btnEnviarRegistro = findViewById(R.id.btnEnviarRegistro);
 
-        // Instanciamos la base de datos
         DB db = new DB(this);
 
         btnEnviarRegistro.setOnClickListener(v -> {
             String hospital = editHospital.getText().toString().trim();
-            String telefonoStr = editTelefono.getText().toString().trim();
+            String telefono = editTelefono.getText().toString().trim();
             String correo = editCorreo.getText().toString().trim();
             String encargado = editEncargado.getText().toString().trim();
             String estado = editEstado.getText().toString().trim();
             String municipio = editMunicipio.getText().toString().trim();
 
-            // Validación de campos vacíos
-            if (hospital.isEmpty() || telefonoStr.isEmpty() || correo.isEmpty() ||
+            if (hospital.isEmpty() || telefono.isEmpty() || correo.isEmpty() ||
                     encargado.isEmpty() || estado.isEmpty() || municipio.isEmpty()) {
                 Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            try {
-                String telefono = editTelefono.getText().toString().trim();
-                String resultado = db.guardar(hospital, telefono, correo, encargado, estado, municipio);
+            // Contraseña por defecto
+            String contrasenia = "12345";
 
-                // Mostramos mensaje de éxito o error
-                Toast.makeText(this, resultado, Toast.LENGTH_SHORT).show();
+            // Guardamos el registro en la base
+            String resultado = db.guardar(hospital, telefono, correo, encargado, estado, municipio, contrasenia);
 
-                // Si se guardó correctamente, cerramos la pantalla
-                if (resultado.contains("correctamente")) {
-                    finish(); // Regresa a la pantalla de login
-                }
+            Toast.makeText(this, resultado, Toast.LENGTH_SHORT).show();
 
-            } catch (NumberFormatException e) {
-                Toast.makeText(this, "El teléfono debe ser un número válido", Toast.LENGTH_SHORT).show();
+            if (resultado.contains("correctamente")) {
+                Toast.makeText(this, "Contraseña asignada: 12345", Toast.LENGTH_LONG).show();
+                finish(); // Regresa al login
             }
         });
     }
