@@ -2,6 +2,7 @@ package com.example.proyecto_final;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -40,6 +41,15 @@ public class LoginActivity extends AppCompatActivity {
 
             if (valido) {
                 Toast.makeText(this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
+
+                // Guardar correo en SharedPreferences (sesión)
+                SharedPreferences prefs = getSharedPreferences("sesion", MODE_PRIVATE);
+                prefs.edit().putString("correo", codigo).apply();
+
+                // Redirigir al perfil (o a la pantalla principal)
+                Intent intent = new Intent(LoginActivity.this, Inicio.class);
+                startActivity(intent);
+                finish();
                 // Redirigir a otra pantalla si lo deseas
                 // Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                 // startActivity(intent);
