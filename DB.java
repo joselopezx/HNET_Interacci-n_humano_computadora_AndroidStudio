@@ -39,4 +39,19 @@ public class DB extends SQLiteOpenHelper {
         return mensaje;
     }
 
+    public boolean verificarLogin(String correo, String contrasenia) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM clientes WHERE correo = ? AND contrasenia = ?";
+        String[] args = {correo, contrasenia};
+        boolean existe = false;
+
+        try (android.database.Cursor cursor = db.rawQuery(query, args)) {
+            existe = cursor.moveToFirst(); // Si hay al menos un resultado, el usuario existe
+        }
+
+        db.close();
+        return existe;
+    }
+
+
 }
