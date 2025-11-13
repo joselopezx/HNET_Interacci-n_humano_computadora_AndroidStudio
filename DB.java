@@ -13,6 +13,7 @@ public class DB extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db){
         db.execSQL("create table clientes(nombreHospital text, telefono text, correo text, encargado text, estado text, municipio text, contrasenia text)");
+        db.execSQL("create table solicitudes(id INTEGER PRIMARY KEY AUTOINCREMENT, nombreMedicamento text, cantidad text, descripcion text, fechaSolicitud TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){}
@@ -51,6 +52,24 @@ public class DB extends SQLiteOpenHelper {
 
         db.close();
         return existe;
+    }
+
+    public String guardarSolicitud(String nombreMedicamento, String cantidad, String descripcion){
+        String mensaje;
+        SQLiteDatabase database = this.getWritableDatabase();
+        ContentValues contenedor = new ContentValues();
+        contenedor.put("nombreMedicamento", nombreMedicamento);
+        contenedor.put("cantidad", cantidad);
+        contenedor.put("descripcion", descripcion);
+
+        try {
+            database.insertOrThrow("solicitudes", null, contenedor);
+            mensaje = "Solicitud guardada correctamente";
+        } catch (SQLException e) {
+            mensaje = "Error al guardar solicitud: " + e.getMessage();
+        }
+        database.close();
+        return mensaje;
     }
 
 
