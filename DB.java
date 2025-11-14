@@ -16,6 +16,7 @@ public class DB extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table clientes(nombreHospital text, telefono text, correo text, encargado text, estado text, municipio text, contrasenia text)");
         db.execSQL("create table solicitudes(id INTEGER PRIMARY KEY AUTOINCREMENT, nombreMedicamento text, cantidad text, descripcion text, fechaSolicitud TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
+        db.execSQL("create table donaciones(id INTEGER PRIMARY KEY AUTOINCREMENT, nombre text, cantidad text, fechaCaducidad text, descripcion text, fechaRegistro TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
     }
 
     @Override
@@ -81,6 +82,28 @@ public class DB extends SQLiteOpenHelper {
         String query = "SELECT * FROM clientes WHERE correo = ?";
         return db.rawQuery(query, new String[]{correo});
     }
+
+    public String guardarDonacion(String nombre, String cantidad, String fechaCaducidad, String descripcion) {
+        String mensaje;
+        SQLiteDatabase database = this.getWritableDatabase();
+
+        ContentValues contenedor = new ContentValues();
+        contenedor.put("nombre", nombre);
+        contenedor.put("cantidad", cantidad);
+        contenedor.put("fechaCaducidad", fechaCaducidad);
+        contenedor.put("descripcion", descripcion);
+
+        try {
+            database.insertOrThrow("donaciones", null, contenedor);
+            mensaje = "Donación guardada exitosamente";
+        } catch (SQLException e) {
+            mensaje = "Error al guardar donación: " + e.getMessage();
+        }
+
+        database.close();
+        return mensaje;
+    }
+
 
 
 }
